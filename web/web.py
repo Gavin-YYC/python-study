@@ -2,12 +2,8 @@
 # 初始化
 from flask import Flask, render_template, redirect
 from flask import request
-from flask.ext.script import Manager
-from flask.ext.bootstrap import Bootstrap
 
 app = Flask(__name__)
-
-bootstrap = Bootstrap( app )
 
 # 路由
 @app.route('/')
@@ -34,9 +30,5 @@ def page_not_found( e ):
 def internal_server_error( e ):
     return '500'
 
-print app.url_map
-
-manager = Manager( app )
-
 if __name__ == '__main__':
-    manager.run()
+    app.run()
