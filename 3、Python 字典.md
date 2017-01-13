@@ -1,0 +1,377 @@
+# Python 字典
+
+知识图谱：
+
+![屏幕快照-2017-01-13-15.38.33](http://7mj4a6.com1.z0.glb.clouddn.com/2017-01-13-屏幕快照-2017-01-13-15.38.33.png)
+
+列表和字典是两种重要的数据结构，列表提供了通过编号进行引用了方式。而列表通过名字来引用值。这种数据类型称为`映射`。
+
+> 字典是Python中唯一内建的映射类型。字典中的值没有特殊顺序。
+
+## 创建字典
+
+```python
+items = {
+	"name": "Gavin",
+	"job": "engineer"
+}
+```
+
+字典由多个键和值组成，键与值之间通过`:`隔开，项之间用`,`隔开。整个字典用`{}`包围起来。
+
+> 字典中的键（key）是唯一的。键可以是数字、字符串甚至是元组。
+
+### dict函数
+
+`dict()`函数可以将其他映射的序列建立成字典。
+
+```python
+items = [("name","Gavin"), ("job", "engieer")]
+d = dict( items )
+# {'job': 'engieer', 'name': 'Gavin'}
+```
+
+或者：
+
+```python
+d = dict(name="Gavin", job="engineer")
+d
+# {'job': 'engineer', 'name': 'Gavin'}
+```
+
+返回空字典：
+
+```python
+dict()
+# {}
+```
+
+> 目前已经学习了`list()`、`str()`、`dict()`、`tuple()`，单独使用这些函数会返回相应的`[]`、`''`、`{}`、`()`。
+
+## 基本操作
+
+### 1、长度
+
+使用`len()`函数，返回键值对的数量。
+
+```python
+user = {"name": "Gavin", "job": "engineer"}
+len(user)
+# 2
+```
+
+### 2、获取值
+
+```python
+user = {"name": "Gavin", "job": "engineer"}
+user['name']
+# 'Gavin'
+```
+
+### 3、设置值
+
+```python
+user = dict()
+user['name'] = "Gavin"
+user
+# {"user": "Gavin"}
+```
+
+### 4、删除值
+
+使用`del`操作符。
+
+```python
+user = {"name": "Gavin", "job": "engineer"}
+del user['name']
+user
+# {"job": "engineer"}
+```
+
+### 5、成员资格
+
+使用`in`操作符，判断字典中是否有`key`。
+
+```python
+d = {"name": "Gavin", "job": "engineer"}
+"name" in d
+# True
+```
+
+> 字典的键是任意的不可变类型，下面是一个重要区别：
+
+```python
+x = []
+y = {}
+x[12] = 'test'
+# IndexError: list assignment index out of range
+
+y[12] = 'test'
+y 
+# {12: 'test'}
+```
+
+将字符串test关联到列表的12号位置上，此时会出错，因为该列表为空，没有12号位置，但是将其关联到字典的12号位置上时，是可以的。
+
+## 字典的格式化字符串
+
+在每个转换说明符中的`%`字符后面，可以加上键（用圆括号括起来），后面跟上其他说明元素。
+
+```python
+user = {"name": "Gavin", "job": "engineer"}
+'My name is %(name)s' % user
+# 'My name is Gavin'
+```
+
+只要字符串中给定的键能在字典中找到，就能进行转换。
+
+```python
+template = '''<html>
+	<head><title>%(title)s</title></head>
+	<body>
+		<h1>%(username)s</h1>
+		<p>%(text)s</p>
+	</body></html>'''
+
+data = {'title': 'My Blog', 'username': 'Gavin', 'text': 'welcome'}
+
+print template % data
+# <html>
+# <head><title>My Blog</title></head>
+# <body>
+# 		<h1>Gavin</h1>
+# 		<p>welcome</p>
+# </html>
+```
+
+## 字典方法
+
+### 1、clear()
+
+清楚字典中所有的项，无返回值。
+
+```python
+d = {"name": "Gavin", "job": "engineer"}
+result = d.clear()
+d
+# {}
+print result
+# None
+```
+
+clear()不仅能清空原字典，与之关联的字典也会清空。
+
+```python
+x = {}
+y = x
+x['name'] = 'Gavin'
+y
+# {'name': 'Gavin'}
+x.clear()
+x
+# {}
+y
+# {}
+```
+
+如果不想让关联的字典清空，则只需给x赋值为空字典即可。
+
+```python
+x = {}
+y = x
+x['name'] = 'Gavin'
+y
+# {'name': 'Gavin'}
+# 此时重新赋值为空
+x = {}
+x
+# {}
+y
+# {'name': 'Gavin'}
+```
+
+### 2、copy()
+
+返回一个具有相同键值的新字典。（浅复制，不是副本）
+
+#### 浅复制
+
+```python
+x = {'name': 'Gavin', 'job': 'engineer'}
+y = x.copy()
+y
+# {'name': 'Gavin', 'job': 'engineer'}
+```
+
+浅复制造成的影响是，对某项内容进行赋值不会影响原字典，但修改某项内容会影响原字典。
+
+```python
+x = {'name': 'Gavin', 'job': 'engineer', 'hobby': ['pingpong', 'reading', 'surfing']}
+y = x.copy()
+y['hobby'].pop()
+x
+# {'hobby': ['pingpong', 'reading'], 'job': 'engineer', 'name': 'Gavin'}
+```
+
+#### 深复制
+
+与之对应的是深复制：`deepcopy()`。
+
+```python
+from copy import deepcopy
+x = {'name': 'Gavin', 'job': 'engineer', 'hobby': ['pingpong', 'reading', 'surfing']}
+y = deepcopy(x)
+y['hobby'].pop()
+x
+# {'hobby': ['pingpong', 'reading'], 'job': 'engineer', 'name': 'Gavin'}
+```
+
+### 3、fromkeys()
+
+使用给定的键建立新字典，每个键值默认为None，除非给定值。
+
+```python
+{}.fromkeys(['name', 'job'])
+# {'job': None, 'name': None}
+
+# 使用默认值
+dict.fromkeys(['name', 'job'], 'empty')
+# {'job': 'empty', 'name': 'empty'}
+```
+
+### 4、get()
+
+访问字典中的某项。这和直接访问key的方式相同，但也有区别。
+
+```python
+# 直接访问不存在的值会报错
+x = {}
+x['name']
+# Traceback (most recent call last):
+#   File "<stdin>", line 1, in <module>
+# KeyError: 'name'
+
+# 但是，使用get访问就不会出错
+y = x.get('name')
+print y
+# None
+
+# 也可指定，获取不到时，返回默认值：
+y = x.get('name', 'empty')
+print y 
+# empty
+```
+
+### 5、has_key()
+
+检查字典中是否有某键存在。相当于`in`操作符。
+
+```python
+x = {'name': 'Gavin'}
+x.has_key('name')
+# True
+```
+
+### 6、items和iteritems
+
+items()方法将字典的所有键值对以列表的形式返回
+
+```python
+x = {'name': 'Gavin', 'job': 'engineer'}
+x.items()
+# [('job', 'engineer'), ('name', 'Gavin')]
+```
+
+> 从上述例子可以看书，返回是没有顺序的。
+
+iteritems()和items()作用大致相同，但返回的是迭代器对象。
+
+### 7、keys和iterkeys
+
+keys()方法将所有的键以列表形式返回，iterkeys返回迭代器对象。
+
+```python
+x = {'name': 'Gavin', 'job': 'engineer'}
+x.keys()
+# ['job', 'name']
+```
+
+### 8、pop()
+
+pop()方法先通过name获取键值对，然后将其移除，返回删除键对应的值。
+
+```python
+x = {'name': 'Gavin', 'job': 'engineer'}
+x.pop('name')
+# 'Gavin'
+```
+
+### 9、popitem()
+
+随机删除某项。因为字典是无顺序的，没有确切的最后一项，所以会删除随机项。
+
+```python
+x = {'name': 'Gavin', 'job': 'engineer'}
+x.popitem()
+# ('job', 'engineer')
+x.popitem()
+# ('name', 'Gavin')
+x.popitem()
+# KeyError: 'popitem(): dictionary is empty'
+```
+
+### 10、setdefault()
+
+和`get()`类似，给不存在的值设置默认值。如果该值存在，不会赋值
+
+```python
+x = {}
+x.setdefault('name', 'Gavin')
+x
+# {'name': 'Gavin'}
+```
+
+不设定默认值，会默认取`None`。
+
+### 11、update()
+
+利用一个字典更新另外一个字典。
+
+新增加的项不存在时则添加，存在时则覆盖。类似JavaScript的extend()方法。
+
+```python
+x = {'name': 'Gavin', 'job': 'engineer'}
+y = {'name': 'Gavin', 'job': 'artist', 'age': 26}
+x.update( y )
+x
+# {'age': 26, 'job': 'artist', 'name': 'Gavin'}
+```
+
+### 12、values和itervalues
+
+values()方法以列表的形式返回字典中的值。itervalues返回迭代器
+
+```python
+x = {'name': 'Gavin', 'job': 'engineer'}
+x.values()
+# ['engineer', 'Gavin']
+```
+
+`values()`方法和`keys()`方法对应。
+
+* kyes 返回键的列表
+* values 返回值的列表
+
+```python
+x = {'name': 'Gavin', 'job': 'engineer'}
+x.keys()
+# ['job', 'name']
+x.values()
+# ['engineer', 'Gavin']
+```
+
+
+
+
+
+
