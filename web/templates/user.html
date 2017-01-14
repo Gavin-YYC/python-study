@@ -1,3 +1,42 @@
-<h1>hello, {{ name }}</h1>
-<p>字典：{{ users['gavin'] }}</p>
-<p>列表：{{ ls[0] }}</p>
+<!--继承模板文件-->
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% for message in get_flashed_messages() %}
+  <div class="alert alert-warning">
+    <button type="button" name="button" class="close" data-dismiss="alert">&times;</button>
+    {{message}}
+  </div>
+{% endfor %}
+
+<!--插入title块-->
+{% block title %}
+  Gavin
+{% endblock %}
+
+<!--插入head块-->
+{% block head %}
+  <!--super()是继承模板中的head部分-->
+  {{ super() }}
+  <style media="screen"></style>
+{% endblock %}
+
+<!--插入body块-->
+{% block body %}
+  <!--控制语句-->
+  {% if name %}
+    <h1>hello: {{name}}</h1>
+  {% else %}
+    <h1>hello stranger</h1>
+  {% endif %}
+
+  <!--循环语句-->
+  <ul>
+    {% for user in users %}
+      <li>{{user}}</li>
+    {% endfor %}
+  </ul>
+
+  <!--表单-->
+  {{ wtf.quick_form( form ) }}
+{% endblock %}
