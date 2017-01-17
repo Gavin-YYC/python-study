@@ -1,5 +1,4 @@
 # coding=utf-8
-
 from flask import Flask, request, session
 from flask import make_response, redirect, render_template
 from flask import url_for, flash
