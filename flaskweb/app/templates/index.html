@@ -4,5 +4,15 @@
 {% block title %} Test {% endblock %}
 
 {% block page_content %}
-  {{ wtf.quick_form( form ) }}
+  <h1>
+    Hello,
+    {% if current_user.is_authenticated %}
+      {{ current_user.username }}
+    {% else %}
+      Stanger
+    {% endif %}
+  </h1>
+  <br>
+  <a href="{{ url_for('auth.register') }}">找回密码</a>|
+  <a href="{{ url_for('auth.register') }}">去注册</a>
 {% endblock %}

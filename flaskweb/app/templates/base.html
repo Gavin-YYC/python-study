@@ -5,17 +5,17 @@
 <div class="navbar navbar-inverse" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <a href="#" class="navbar-brand">Home</a>
+      <a href="/" class="navbar-brand">Home</a>
     </div>
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-right">
         {% if current_user.is_authenticated %}
           <li>
-            <a href="{{ url_for('auth.logout') }}">退出</a>
+            <a href="{{ url_for('auth.logout') }}">log out</a>
           </li>
         {% else %}
           <li>
-            <a href="{{ url_for('auth.login') }}">登录</a>
+            <a href="{{ url_for('auth.login') }}">log in</a>
           </li>
         {% endif %}
       </ul>
@@ -26,6 +26,12 @@
 
 {% block content %}
   <div class="container">
+    {% for message in get_flashed_messages() %}
+      <div class="alert alert-warning">
+        <button type="button" name="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message }}
+      </div>
+    {% endfor %}
     {% block page_content %}{% endblock %}
   </div>
 {% endblock %}
