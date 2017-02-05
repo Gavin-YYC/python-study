@@ -1,9 +1,12 @@
 # coding=utf-8
-
 from . import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from . import login_manager
+
+# 生成加密令牌
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from flask import current_app
 
 class Role( db.Model ):
     __tablename__ = 'roles'
@@ -20,6 +23,25 @@ class User( db.Model, UserMixin ):
     email = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(128))
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+
+    # 用户是否已经确认邮件
+    confirmed = db.Column(db.Boolean, default=False)
+
+    def generate_confirmation_token(self, expiration=3600):
+        s = Serializer( current_app.config['SECRET_KEY'], expiration )
+        return s.dumps( {'confirm': self.id} )
+
+    def confim( self, token ):
+        s = Serializer( current_app.config['SECRET_KEY'] )
+        try:
+            data = s.loads( token )
+        except:
+            return False
+        if data.get('confim') != self.id:
+            return False
+        self.confirmed = True
+        db.session.add( self )
+        return True
 
     def __repr__( self ):
         return '<User {0}>'.format( self.username )
