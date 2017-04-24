@@ -31,13 +31,13 @@ class User( db.Model, UserMixin ):
         s = Serializer( current_app.config['SECRET_KEY'], expiration )
         return s.dumps( {'confirm': self.id} )
 
-    def confim( self, token ):
+    def confirm( self, token ):
         s = Serializer( current_app.config['SECRET_KEY'] )
         try:
             data = s.loads( token )
         except:
             return False
-        if data.get('confim') != self.id:
+        if data.get('confirm') != self.id:
             return False
         self.confirmed = True
         db.session.add( self )
